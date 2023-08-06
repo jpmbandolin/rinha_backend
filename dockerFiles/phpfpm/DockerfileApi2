@@ -15,4 +15,4 @@ WORKDIR /api
 
 COPY  . .
 
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
