@@ -1,0 +1,33 @@
+{
+  "name": "jpbandolin/rinhabackend",
+  "description": "Rinha de Backend",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "João Paulo Monteiro Bandolin",
+      "email": "rinhabe@jpbandolin.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "": "api"
+    }
+  },
+  "require": {
+    "slim/slim": "4.*",
+    "slim/psr7": "^1.6",
+    "php-di/php-di": "^6",
+    "php-di/slim-bridge": "^3"
+  }
+  ,
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "doctrine/migrations": "3.3.*"
+  },
+  "config": {
+    "platform": {
+      "php": "8.1"
+    }
+  }
+}
