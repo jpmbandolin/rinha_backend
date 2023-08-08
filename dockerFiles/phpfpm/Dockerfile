@@ -17,7 +17,7 @@ WORKDIR /api
 
 COPY  . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 # Make the start script executable
 COPY start.sh /start.sh
