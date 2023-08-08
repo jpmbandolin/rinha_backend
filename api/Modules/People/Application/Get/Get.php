@@ -5,13 +5,13 @@ namespace Modules\People\Application\Get;
 use Modules\People\Domain\Person;
 use Psr\Http\Message\ResponseInterface;
 use ApplicationBase\Infra\Abstracts\ControllerAbstract;
-use ApplicationBase\Infra\Exceptions\{NotFoundException, DatabaseException};
+use ApplicationBase\Infra\Exceptions\{InvalidValueException, NotFoundException, DatabaseException};
 
 class Get extends ControllerAbstract
 {
 	/**
 	 * @throws DatabaseException
-	 * @throws NotFoundException
+	 * @throws NotFoundException|InvalidValueException
 	 */
 	public function run(GetDTO $dto): ResponseInterface
 	{
@@ -30,7 +30,9 @@ class Get extends ControllerAbstract
 				"apelido" => $person->getNickname(),
 				"nome" => $person->getName(),
 				"stack" => $person->getStack()
-			], Person::search($dto->t));
+			], Person::search(
+				$dto->t ??  throw (new InvalidValueException("The term should be present on the request"))->setStatusCode(400)
+			));
 		}
 
 		return $this->replyRequest($response);
