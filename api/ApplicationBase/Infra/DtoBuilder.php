@@ -21,7 +21,9 @@ readonly class DtoBuilder
 	 * @throws InvalidValueException
 	 * @throws ReflectionException
 	 */
-	public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface{
+	public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+	{
+		Application::startTimer("dtoBuilder");
 		$body       = $request->getParsedBody();
 		$query      = $request->getQueryParams();
 		$arguments  = RouteContext::fromRequest($request)->getRoute()?->getArguments();
@@ -35,7 +37,8 @@ readonly class DtoBuilder
 		$container = Application::getSlimContainer();
 		$container->set($dto::class, $dto);
 		$request = $request->withParsedBody($dto);
-
+		
+		Application::endTimer("dtoBuilder");
 		return $handler->handle($request);
 	}
 

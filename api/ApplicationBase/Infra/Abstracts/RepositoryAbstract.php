@@ -3,6 +3,7 @@
 namespace ApplicationBase\Infra\Abstracts;
 
 use ApplicationBase\Infra\Database;
+use ApplicationBase\Infra\Application;
 use ApplicationBase\Infra\Exceptions\DatabaseException;
 use ApplicationBase\Infra\QueryBuilder;
 
@@ -18,7 +19,10 @@ abstract class RepositoryAbstract
     protected static function fetchMultiObject(QueryBuilder $queryBuilder, string $className, string $errorMessage): array
     {
         try {
-            return Database::getInstance()->fetchMultiObject($queryBuilder, $className) ?: [];
+	        Application::startTimer("dbMultiFetchRequest");
+            $response =  Database::getInstance()->fetchMultiObject($queryBuilder, $className) ?: [];
+	        Application::endTimer("dbMultiFetchRequest");
+			return $response;
         }catch (\Throwable $t){
             throw new DatabaseException($errorMessage, previous: $t);
         }
@@ -34,7 +38,10 @@ abstract class RepositoryAbstract
     protected static function fetchObject(QueryBuilder $queryBuilder, string $className, string $errorMessage): mixed
     {
         try {
-            return Database::getInstance()->fetchObject($queryBuilder, $className);
+			Application::startTimer("dbFetchRequest");
+            $response = Database::getInstance()->fetchObject($queryBuilder, $className);
+	        Application::endTimer("dbFetchRequest");
+			return $response;
         }catch (\Throwable $t){
             throw new DatabaseException($errorMessage, previous: $t);
         }
@@ -49,7 +56,9 @@ abstract class RepositoryAbstract
     protected static function prepareAndExecute(QueryBuilder $queryBuilder, string $errorMessage): void
     {
         try {
+	        Application::startTimer("dbExecute");
             Database::getInstance()->prepareAndExecute($queryBuilder);
+	        Application::endTimer("dbExecute");
         }catch (\Throwable $t){
             throw new DatabaseException($errorMessage, previous: $t);
         }

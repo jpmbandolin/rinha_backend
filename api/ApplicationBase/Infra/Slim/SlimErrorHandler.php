@@ -52,6 +52,11 @@ class SlimErrorHandler extends ErrorHandler
         );
 		
 		$responseStatus = $handledException->getStatusCode() ?? $handledException->getDefaultHttpStatusCode();
+		
+		
+		if (!in_array($responseStatus, [200, 201, 404, 422, 400])){
+			trigger_error(json_encode($handledException->getDetailedErrorMessage()), E_USER_WARNING);
+		}
 
 		return $response
 			->withStatus($responseStatus)
@@ -60,4 +65,5 @@ class SlimErrorHandler extends ErrorHandler
 			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
 			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 	}
+	
 }

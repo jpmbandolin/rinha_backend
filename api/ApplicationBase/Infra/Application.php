@@ -12,7 +12,37 @@ class Application
 {
     private static Container $container;
     private static App $app;
-
+	
+	private static int $initialExecutionTime;
+	
+	private static array $timers = [];
+	
+	public static function setInitialExecutionTime(float $time): void
+	{
+		self::$initialExecutionTime = $time;
+	}
+	
+	public static function startTimer(string $timerName): void
+	{
+		self::$timers[$timerName] = ["start" => microtime(true)];
+	}
+	
+	public static function endTimer(string $timerName): void
+	{
+		self::$timers[$timerName]["end"] = microtime(true);
+	}
+	
+	public static function getTimers(): array
+	{
+		return self::$timers;
+	}
+	
+	public static function getInitialExecutionTime(): int
+	{
+		return self::$initialExecutionTime;
+	}
+	
+	
     public static function setupEnvironment(string $envFilePath = "../env.ini"): void
     {
         $ENV = parse_ini_file($envFilePath, true);

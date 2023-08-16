@@ -17,8 +17,10 @@ final class Redis
 	public static function getInternalConnection():\Redis
     {
 		if (is_null(self::$connection)) {
+			Application::startTimer("startRedisConnection");
 			self::$connection = new \Redis;
-			self::$connection->connect(Environment::getEnvironment()->getRedis()->getHost());
+			self::$connection->pconnect(Environment::getEnvironment()->getRedis()->getHost());
+			Application::endTimer("startRedisConnection");
 		}
 
 		return self::$connection;

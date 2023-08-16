@@ -17,6 +17,8 @@ WORKDIR /api
 
 COPY  . .
 
+COPY www.conf /opt/bitnami/php/etc/php-fpm.d/www.conf
+
 RUN composer install --optimize-autoloader
 
 # Make the start script executable

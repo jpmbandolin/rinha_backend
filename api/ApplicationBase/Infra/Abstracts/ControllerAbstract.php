@@ -3,6 +3,7 @@
 
 namespace ApplicationBase\Infra\Abstracts;
 
+use ApplicationBase\Infra\Application;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Response;
 
@@ -31,11 +32,24 @@ abstract class ControllerAbstract
 				$response = $response->withHeader($headerName, $headerValue);
 			}
 		}
+		
+		foreach (Application::getTimers() as $timerName => $timer){
+			$response = $response->withHeader($timerName, ($timer["end"] - $timer["start"]));
+		}
 
 		if ($status === 201){
 			return $response->withStatus($status);
 		}
+		
+		$endTime = microtime(true);
 
-		return $response->withHeader('Content-Type', 'application/json')->withBody($resBody)->withStatus($status);
+		return $response
+			->withHeader('Content-Type', 'application/json')
+			->withHeader("duration", $endTime - Application::getInitialExecutionTime())
+			->withHeader("startTime", Application::getInitialExecutionTime())
+			->withHeader("endTime", $endTime)
+			->withHeader("timers", json_encode(Application::getTimers()))
+			->withBody($resBody)
+			->withStatus($status);
 	}
 }

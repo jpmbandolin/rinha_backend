@@ -1,3 +1,3 @@
-FROM bitnami/nginx:latest
+FROM nginx
 COPY . /api
-COPY nginx.conf /opt/bitnami/nginx/conf/server_blocks/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
