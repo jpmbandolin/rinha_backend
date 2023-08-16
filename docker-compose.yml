@@ -10,7 +10,7 @@ services:
       - mysql
     networks:
       - app-tier
-   deploy:
+    deploy:
       resources:
         limits:
           cpus: '0.3'
